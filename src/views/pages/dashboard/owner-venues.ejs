@@ -1,0 +1,100 @@
+<section class="container py-5 mt-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
+    <div>
+      <div class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 shadow-sm rounded-pill fw-bold text-uppercase" style="letter-spacing: 0.05em;">
+        <i class="fa-solid fa-hotel me-2"></i>Inventory
+      </div>
+      <h2 class="display-6 fw-bold mb-1 font-outfit text-dark">Your Venues</h2>
+      <p class="text-muted fs-6 mb-0">Manage listing details, pricing, and operational status.</p>
+    </div>
+    <div class="mt-4 mt-md-0">
+      <a class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm px-4" href="/owner/venues/new">
+        <i class="fa-solid fa-plus me-2"></i>Add New Venue
+      </a>
+    </div>
+  </div>
+
+  <% if (!venues || venues.length === 0) { %>
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+      <div class="py-5">
+         <i class="fa-solid fa-house-chimney-medical text-muted opacity-25 mb-4" style="font-size: 5rem;"></i>
+         <h3 class="fw-bold text-dark font-outfit">No venues listed yet</h3>
+         <p class="text-muted mb-4 max-w-500 mx-auto">Start by adding your first sports venue to begin receiving bookings from players in your city.</p>
+         <a href="/owner/venues/new" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm px-5">Add My First Venue</a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="row g-4">
+      <% venues.forEach((venue) => { %>
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 hover-lift bg-white">
+            <div class="row g-0 h-100">
+              <div class="col-md-4 position-relative">
+                <% if (venue.photos && venue.photos.length > 0) { %>
+                  <img src="<%= venue.photos[0] %>" class="img-fluid h-100 object-fit-cover" alt="<%= venue.name %>" style="min-height: 200px;">
+                <% } else { %>
+                  <div class="bg-light h-100 d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                    <i class="fa-solid fa-image text-muted opacity-25 fs-1"></i>
+                  </div>
+                <% } %>
+                <div class="position-absolute top-0 start-0 m-3">
+                  <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase shadow-sm <%= venue.isApproved ? 'bg-success text-white' : 'bg-warning text-dark' %>" style="letter-spacing: 0.05em; font-size: 0.7rem;">
+                    <i class="fa-solid <%= venue.isApproved ? 'fa-check-circle' : 'fa-clock' %> me-1"></i>
+                    <%= venue.isApproved ? 'Approved' : 'Pending' %>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body p-4 d-flex flex-column h-100">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h4 class="fw-bold text-dark font-outfit mb-0"><%= venue.name %></h4>
+                    <span class="badge bg-light text-muted border rounded-pill px-2 py-1 small fw-bold"><%= venue.status %></span>
+                  </div>
+                  <p class="text-muted small mb-3"><i class="fa-solid fa-location-dot me-2 text-primary"></i><%= venue.location.city %></p>
+                  
+                  <div class="mb-4">
+                    <% venue.sportTypes.forEach(sport => { %>
+                      <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-1 me-1 small fw-bold"><%= sport %></span>
+                    <% }) %>
+                  </div>
+
+                  <div class="mt-auto pt-3 border-top">
+                    <div class="d-grid grid-btns gap-2">
+                      <div class="row g-2">
+                        <div class="col-6">
+                          <a class="btn btn-outline-primary btn-sm w-100 rounded-pill fw-bold" href="/owner/venues/<%= venue._id %>/edit">
+                            <i class="fa-solid fa-pen-to-square me-1"></i> Edit Info
+                          </a>
+                        </div>
+                        <div class="col-6">
+                          <a class="btn btn-outline-primary btn-sm w-100 rounded-pill fw-bold" href="/owner/venues/<%= venue._id %>/slots">
+                            <i class="fa-solid fa-calendar-minus me-1"></i> Slots
+                          </a>
+                        </div>
+                        <div class="col-12 mt-2">
+                          <a class="btn btn-primary d-block w-100 rounded-pill fw-bold" href="/owner/offers">
+                            <i class="fa-solid fa-tags me-1"></i> Manage Offers
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<style>
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+  }
+</style>

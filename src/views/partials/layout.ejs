@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title ? `${title} | ${appName}` : appName %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body class="bg-body d-flex flex-column min-vh-100">
+    <!-- Premium Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+          <i class="fa-solid fa-bolt text-warning"></i><span>ArenaBook</span>
+        </a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fa-solid fa-bars fs-3 text-dark"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+            <li class="nav-item">
+              <a class="nav-link px-3" href="/venues"><i class="fa-solid fa-map-location-dot me-2"></i>Venues</a>
+            </li>
+            <% if (!currentUser) { %>
+              <li class="nav-item ms-lg-2">
+                <a class="nav-link px-3" href="/auth/login"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Login</a>
+              </li>
+              <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                <a class="btn btn-primary" href="/auth/register">Get Started <i class="fa-solid fa-angle-right ms-1"></i></a>
+              </li>
+            <% } else { %>
+              <li class="nav-item ms-lg-2">
+                <a class="nav-link px-3" href="/dashboard"><i class="fa-solid fa-gauge me-2"></i>Dashboard</a>
+              </li>
+              <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                <form action="/auth/logout" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</button>
+                </form>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="page-content flex-grow-1 animate-fade-in">
+      <% if (flash) { %>
+        <div class="container mt-4">
+          <div class="alert alert-<%= flash.type === 'error' ? 'danger' : 'success' %> alert-dismissible fade show shadow-sm border-0 rounded-4" role="alert">
+            <i class="fa-solid <%= flash.type === 'error' ? 'fa-triangle-exclamation text-danger' : 'fa-circle-check text-success' %> me-2 fs-5 align-middle"></i>
+            <span class="fw-medium"><%= flash.message %></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        </div>
+      <% } %>
+
+      <%- body %>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="premium-footer py-5 mt-auto">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-4 mb-4 mb-lg-0">
+            <a class="d-flex align-items-center gap-2 text-white text-decoration-none mb-3" href="/">
+              <i class="fa-solid fa-bolt text-warning fs-3"></i><span class="fs-3 fw-bold font-outfit">ArenaBook</span>
+            </a>
+            <p class="text-secondary mb-4">Your ultimate destination for discovering and booking premium sports venues. Access state-of-the-art facilities with real-time availability and instant reservations.</p>
+            <div class="d-flex gap-3">
+              <a href="#" class="btn btn-outline-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fa-brands fa-twitter"></i></a>
+              <a href="#" class="btn btn-outline-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" class="btn btn-outline-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-4 mb-4 mb-md-0 offset-lg-1">
+            <h5 class="mb-4">Explore</h5>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+              <li><a href="/venues"><i class="fa-solid fa-angle-right me-2 small"></i>Find Venues</a></li>
+              <li><a href="#"><i class="fa-solid fa-angle-right me-2 small"></i>Top Rated</a></li>
+              <li><a href="#"><i class="fa-solid fa-angle-right me-2 small"></i>New Offers</a></li>
+              <li><a href="#"><i class="fa-solid fa-angle-right me-2 small"></i>Pricing</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+            <h5 class="mb-4">Account</h5>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+              <li><a href="/auth/login"><i class="fa-solid fa-angle-right me-2 small"></i>Login</a></li>
+              <li><a href="/auth/register"><i class="fa-solid fa-angle-right me-2 small"></i>Register</a></li>
+              <li><a href="/dashboard"><i class="fa-solid fa-angle-right me-2 small"></i>Dashboard</a></li>
+              <li><a href="#"><i class="fa-solid fa-angle-right me-2 small"></i>Support</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <h5 class="mb-4">Contact</h5>
+            <ul class="list-unstyled d-flex flex-column gap-3 mb-0 text-secondary">
+              <li class="d-flex gap-3"><i class="fa-solid fa-location-dot mt-1 text-primary-light"></i> <span>Ahmedabad</span></li>
+              <li class="d-flex gap-3"><i class="fa-solid fa-phone mt-1 text-primary-light"></i> <span>+91 7041542983</span></li>
+              <li class="d-flex gap-3"><i class="fa-solid fa-envelope mt-1 text-primary-light"></i> <span>hadiyalnilesh6061@gmail.com</span></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-secondary opacity-25 my-4">
+        <div class="text-center text-secondary small">
+          &copy; <%= new Date().getFullYear() %> ArenaBook. All rights reserved. Premium Sports Booking Platform.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

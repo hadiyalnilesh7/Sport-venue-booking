@@ -1,0 +1,143 @@
+<section class="hero-gradient text-white pt-5 pb-5 pb-lg-5 mb-5 text-center">
+  <div class="container py-5 position-relative z-1">
+    <span class="badge bg-white text-primary mb-3 px-3 py-2 shadow-sm rounded-pill"><i class="fa-solid fa-bolt text-warning me-2"></i> Instant Booking</span>
+    <h1 class="display-3 fw-bold mb-4 font-outfit">Find & Book <span class="text-warning">Premium</span> Sports Venues</h1>
+    <p class="lead mb-0 mx-auto text-light fw-light" style="max-width: 800px; font-size: 1.25rem;">
+      Discover top-rated football turfs, cricket nets, basketball courts, and more. Compare transparent pricing and lock your slot instantly.
+    </p>
+  </div>
+</section>
+
+<div class="container position-relative z-3" style="margin-top: -6rem;">
+  <% const hasActiveFilters = Boolean(filters.location || filters.sportType || selectedDate); %>
+  <form class="card border-0 shadow-lg p-3 p-md-4 mb-5 mx-auto" action="/venues" method="GET" style="max-width: 1100px; border-radius: 1.25rem;">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-6 col-lg-3">
+        <label class="form-label text-muted small fw-bold text-uppercase"><i class="fa-solid fa-location-dot me-2 text-primary"></i>Location</label>
+        <div class="input-group">
+          <input type="text" class="form-control form-control-lg border-0 bg-light" name="location" placeholder="City or area" value="<%= filters.location || '' %>" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <label class="form-label text-muted small fw-bold text-uppercase"><i class="fa-solid fa-basketball me-2 text-warning"></i>Sport Type</label>
+        <div class="input-group">
+          <input type="text" class="form-control form-control-lg border-0 bg-light" name="sportType" placeholder="Football, Badminton..." value="<%= filters.sportType || '' %>" />
+        </div>
+      </div>
+      <div class="col-12 col-md-8 col-lg-4">
+        <label class="form-label text-muted small fw-bold text-uppercase"><i class="fa-regular fa-calendar-days me-2 text-success"></i>Date</label>
+        <div class="input-group">
+          <input type="date" class="form-control form-control-lg border-0 bg-light" name="date" value="<%= selectedDate %>" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="d-flex gap-2 h-100 align-items-end justify-content-start">
+          <button
+            class="btn btn-primary btn-lg shadow-sm d-inline-flex align-items-center justify-content-center"
+            type="submit"
+            title="Search venues"
+            aria-label="Search venues"
+            style="width: 58px; height: 58px; padding: 0;"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <% if (hasActiveFilters) { %>
+            <a
+              href="/venues"
+              class="btn btn-outline-secondary btn-lg d-inline-flex align-items-center justify-content-center"
+              title="Clear filters"
+              aria-label="Clear filters"
+              style="width: 58px; height: 58px; padding: 0;"
+            >
+              <i class="fa-solid fa-rotate-left"></i>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<section class="container mb-5 pb-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-2 border-bottom">
+    <h2 class="fw-bold mb-3 mb-md-0 font-outfit">Available Sports Venues</h2>
+    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fs-6">
+      <i class="fa-solid fa-map-pin me-2"></i><%= venues.length %> venues found
+    </span>
+  </div>
+
+  <% if (venues.length === 0) { %>
+    <div class="text-center py-5 my-5">
+      <i class="fa-regular fa-compass text-muted mb-3" style="font-size: 4rem;"></i>
+      <h3 class="fw-bold text-dark">No venues found</h3>
+      <p class="text-muted">Try adjusting your search location, sport type, or date criteria.</p>
+      <a href="/venues" class="btn btn-outline-primary mt-3">Clear Search</a>
+    </div>
+  <% } else { %>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% venues.forEach((venue) => { %>
+        <% const venueImage = venue.photos && venue.photos[0] ? venue.photos[0] : 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80'; %>
+        <div class="col">
+          <article class="card h-100 border-0 venue-card-hover" style="border-radius: 1.25rem; overflow: hidden; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div class="position-relative">
+              <div style="height: 240px; background-image: url('<%= venueImage %>'); background-size: cover; background-position: center; transition: all 0.5s ease;" class="venue-img-wrap"></div>
+              <div class="position-absolute top-0 end-0 p-3">
+                <span class="badge bg-white text-dark shadow-sm px-2 py-2 d-flex align-items-center rounded-pill">
+                  <i class="fa-solid fa-star text-warning me-1"></i> <span class="fw-bold"><%= venue.ratingAverage ? venue.ratingAverage.toFixed(1) : 'New' %></span>
+                </span>
+              </div>
+              <% const venueOffer = offersMap && offersMap[venue._id.toString()]; %>
+              <% if (venueOffer) { %>
+                <div class="position-absolute top-0 start-0 p-3">
+                  <span class="badge text-white fw-bold px-3 py-2 rounded-pill shadow" style="background: linear-gradient(135deg, #e74c3c, #c0392b); font-size: 0.75rem; letter-spacing: 0.03em;">
+                    <i class="fa-solid fa-tags me-1"></i>
+                    <% if (venueOffer.discountType === 'percentage') { %>
+                      <%= venueOffer.discountValue %>% OFF
+                    <% } else { %>
+                      ₹<%= venueOffer.discountValue %> OFF
+                    <% } %>
+                  </span>
+                </div>
+              <% } %>
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
+                <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase tracking-wide px-2 py-1" style="font-size: 0.7rem;"><%= venue.sportTypes[0] || 'Sport' %></span>
+                <% if (venueOffer) { %>
+                  <span class="badge bg-danger-subtle text-danger fw-bold px-2 py-1" style="font-size: 0.7rem;"><i class="fa-solid fa-ticket me-1"></i><%= venueOffer.title %></span>
+                <% } %>
+              </div>
+              <h4 class="card-title fw-bold font-outfit text-dark mb-2"><%= venue.name %></h4>
+              <p class="card-text text-muted small mb-4 d-flex align-items-center">
+                <i class="fa-solid fa-location-dot me-2 text-primary-light"></i> <%= venue.location.city %> <%= venue.location.area ? `- ${venue.location.area}` : '' %>
+              </p>
+              
+              <div class="mt-auto pt-4 border-top d-flex justify-content-between align-items-end">
+                <div>
+                   <span class="d-block text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">Starting From</span>
+                   <div class="d-flex align-items-baseline gap-1">
+                     <span class="text-primary fw-bold fs-4">₹<%= getVenueStartingPrice(venue) %></span>
+                      <span class="text-muted small">/slot</span>
+                   </div>
+                </div>
+                <a class="btn btn-outline-primary rounded-pill px-4 fw-semibold" href="/venues/<%= venue.slug %>?date=<%= selectedDate %>">
+                  Book <i class="fa-solid fa-arrow-right ms-1 small"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<style>
+  .venue-card-hover .venue-img-wrap {
+    transform: scale(1);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .venue-card-hover:hover .venue-img-wrap {
+    transform: scale(1.05);
+  }
+</style>

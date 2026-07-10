@@ -1,0 +1,285 @@
+<section class="container py-5 mt-4">
+  <div class="max-w-900 mx-auto">
+    <div class="mb-5 pb-3 border-bottom d-flex align-items-center">
+      <div class="bg-primary-subtle text-primary rounded-circle p-3 me-3">
+        <i class="fa-solid fa-hotel fs-3"></i>
+      </div>
+      <div>
+        <div class="badge bg-primary-subtle text-primary mb-1 px-3 py-1 rounded-pill fw-bold text-uppercase small">Owner Module</div>
+        <h2 class="display-6 fw-bold mb-0 font-outfit text-dark">Create New Venue</h2>
+      </div>
+    </div>
+
+    <form action="/owner/venues" method="POST" enctype="multipart/form-data" class="row g-4">
+      <!-- Section 1: Basic Information -->
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+          <h4 class="fw-bold mb-4 font-outfit"><i class="fa-solid fa-circle-info text-primary me-2"></i> Basic Information</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Venue Name</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-heading text-muted"></i></span>
+                <input type="text" name="name" required class="form-control bg-light border-0" placeholder="e.g. Star Turf Park" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Sport Types</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-volleyball text-muted"></i></span>
+                <input type="text" name="sportTypes" placeholder="Football, Badminton, Tennis" required class="form-control bg-light border-0" />
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted text-uppercase">Description</label>
+              <textarea name="description" rows="4" required class="form-control bg-light border-0" placeholder="Tell players about your venue/experience..."></textarea>
+            </div>
+             <div class="col-12">
+              <label class="form-label small fw-bold text-muted text-uppercase">Amenities</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-plug text-muted"></i></span>
+                <input type="text" name="amenities" placeholder="Free Parking, Changing Rooms, Floodlights" class="form-control bg-light border-0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Location Details -->
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+          <h4 class="fw-bold mb-4 font-outfit"><i class="fa-solid fa-map-location-dot text-primary me-2"></i> Location Details</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">City</label>
+              <input type="text" name="city" required class="form-control bg-light border-0" placeholder="Mumbai" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Area / Neighborhood</label>
+              <input type="text" name="area" class="form-control bg-light border-0" placeholder="Andheri West" />
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted text-uppercase">Full Address</label>
+              <input type="text" name="address" required class="form-control bg-light border-0" placeholder="Room no, Street, Landmark" />
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted text-uppercase">Google Maps URL</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-link text-muted"></i></span>
+                <input type="url" name="mapLink" class="form-control bg-light border-0" placeholder="https://maps.google.com/..." />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Operational Hours -->
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+          <h4 class="fw-bold mb-4 font-outfit"><i class="fa-solid fa-clock text-primary me-2"></i> Operational Hours</h4>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Opening Time</label>
+              <input type="time" name="openingTime" required class="form-control bg-light border-0" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Closing Time</label>
+              <input type="time" name="closingTime" required class="form-control bg-light border-0" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Slot Duration (Minutes)</label>
+              <input type="number" name="slotDurationMinutes" value="120" class="form-control bg-light border-0" />
+            </div>
+             <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Advance Booking %</label>
+              <input type="number" name="advancePercentage" value="25" class="form-control bg-light border-0" />
+              <div class="form-text small opacity-75">Percentage player pays online to reserve.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Pricing Strategy (2-Hour Base) -->
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+          <h4 class="fw-bold mb-4 font-outfit"><i class="fa-solid fa-tags text-primary me-2"></i> Pricing Strategy (Base per 2h)</h4>
+          <div class="row g-3">
+             <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Base Price (2 Hours)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0">₹</span>
+                <input type="number" name="baseTwoHourPrice" class="form-control bg-light border-0" placeholder="1000" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Weekday Price</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0">₹</span>
+                <input type="number" name="weekdayPrice" required class="form-control bg-light border-0" placeholder="800" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Saturday Price</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0">₹</span>
+                <input type="number" name="saturdayPrice" required class="form-control bg-light border-0" placeholder="1200" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted text-uppercase">Sunday Price</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0">₹</span>
+                <input type="number" name="sundayPrice" required class="form-control bg-light border-0" placeholder="1200" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="rounded-4 border bg-light p-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                  <div>
+                    <h5 class="fw-bold text-dark mb-1">Sport-wise Slot Prices</h5>
+                    <p class="text-muted small mb-0">Add separate slot rates for each sport listed above. New sports start with the default prices you entered.</p>
+                  </div>
+                </div>
+                <div id="sportPricingRows" class="row g-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Media Upload -->
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+          <h4 class="fw-bold mb-4 font-outfit"><i class="fa-solid fa-camera text-primary me-2"></i> Venue Gallery</h4>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted text-uppercase">Upload Photos</label>
+            <input type="file" name="photos" accept="image/*" multiple class="form-control bg-light border-0" id="photoUpload" />
+            <div class="form-text small opacity-75">Select multiple high-quality images. Recommended 1200x800px.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 mb-5">
+        <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg py-3" type="submit">
+          <i class="fa-solid fa-circle-check me-2"></i> Launch Venue Listing
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .max-w-900 { max-width: 900px; }
+  .form-control:focus {
+    background-color: #fff !important;
+    box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1) !important;
+    border: none !important;
+  }
+</style>
+
+<script>
+  (() => {
+    const sportTypesInput = document.querySelector('input[name="sportTypes"]');
+    const weekdayInput = document.querySelector('input[name="weekdayPrice"]');
+    const saturdayInput = document.querySelector('input[name="saturdayPrice"]');
+    const sundayInput = document.querySelector('input[name="sundayPrice"]');
+    const rowsContainer = document.getElementById('sportPricingRows');
+    const initialPricing = [];
+
+    if (!sportTypesInput || !rowsContainer) {
+      return;
+    }
+
+    const normalizeSportType = (value = '') => value.trim().toLowerCase();
+    const escapeHtml = (value = '') => value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    const parseSportTypes = (value = '') => {
+      const unique = new Map();
+      value.split(',').map((item) => item.trim()).filter(Boolean).forEach((sportType) => {
+        const normalized = normalizeSportType(sportType);
+        if (!unique.has(normalized)) {
+          unique.set(normalized, sportType);
+        }
+      });
+      return Array.from(unique.values());
+    };
+
+    const getFallbackPricing = () => ({
+      weekdayPrice: weekdayInput.value || '',
+      saturdayPrice: saturdayInput.value || '',
+      sundayPrice: sundayInput.value || ''
+    });
+
+    const collectCurrentRows = () => {
+      const values = new Map();
+      rowsContainer.querySelectorAll('[data-sport-pricing-row]').forEach((row) => {
+        const sportType = row.querySelector('input[name="sportPricingSportType"]')?.value || '';
+        values.set(normalizeSportType(sportType), {
+          sportType,
+          weekdayPrice: row.querySelector('input[name="sportPricingWeekdayPrice"]')?.value || '',
+          saturdayPrice: row.querySelector('input[name="sportPricingSaturdayPrice"]')?.value || '',
+          sundayPrice: row.querySelector('input[name="sportPricingSundayPrice"]')?.value || ''
+        });
+      });
+      return values;
+    };
+
+    const seedPricingMap = (sports, currentValues) => {
+      const fallbackPricing = getFallbackPricing();
+      return sports.map((sportType) => {
+        const normalized = normalizeSportType(sportType);
+        const existingPricing = currentValues.get(normalized) || initialPricing.find((item) => normalizeSportType(item.sportType) === normalized);
+        return {
+          sportType,
+          weekdayPrice: existingPricing?.weekdayPrice ?? fallbackPricing.weekdayPrice,
+          saturdayPrice: existingPricing?.saturdayPrice ?? fallbackPricing.saturdayPrice,
+          sundayPrice: existingPricing?.sundayPrice ?? fallbackPricing.sundayPrice
+        };
+      });
+    };
+
+    const renderRows = () => {
+      const sports = parseSportTypes(sportTypesInput.value);
+      const currentValues = collectCurrentRows();
+
+      if (!sports.length) {
+        rowsContainer.innerHTML = '<div class="col-12"><div class="text-muted small">Add sport types above to manage separate slot pricing.</div></div>';
+        return;
+      }
+
+      const pricingRows = seedPricingMap(sports, currentValues);
+      rowsContainer.innerHTML = pricingRows.map((pricing) => `
+        <div class="col-12" data-sport-pricing-row>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Sport</label>
+              <input type="text" name="sportPricingSportType" class="form-control bg-white border-0" value="${escapeHtml(pricing.sportType)}" readonly />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Weekday</label>
+              <input type="number" name="sportPricingWeekdayPrice" class="form-control bg-white border-0" value="${pricing.weekdayPrice}" min="1" required />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Saturday</label>
+              <input type="number" name="sportPricingSaturdayPrice" class="form-control bg-white border-0" value="${pricing.saturdayPrice}" min="1" required />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-bold text-muted text-uppercase">Sunday</label>
+              <input type="number" name="sportPricingSundayPrice" class="form-control bg-white border-0" value="${pricing.sundayPrice}" min="1" required />
+            </div>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    sportTypesInput.addEventListener('input', renderRows);
+    weekdayInput.addEventListener('change', renderRows);
+    saturdayInput.addEventListener('change', renderRows);
+    sundayInput.addEventListener('change', renderRows);
+    renderRows();
+  })();
+</script>

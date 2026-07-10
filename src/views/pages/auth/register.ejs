@@ -1,0 +1,118 @@
+<section class="container pb-5 mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-7">
+      <div class="card border-0 rounded-4 overflow-hidden" style="box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2 font-outfit text-dark">Join ArenaBook</h2>
+            <p class="text-muted">Create an account to book venues effortlessly and track your games.</p>
+          </div>
+          
+          <form action="/auth/register" method="POST" enctype="multipart/form-data">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Full Name</label>
+                <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
+                  <span class="input-group-text bg-transparent border-0 pe-1"><i class="fa-regular fa-user text-muted"></i></span>
+                  <input type="text" class="form-control bg-transparent border-0 ps-2" name="fullName" required placeholder="John Doe" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Phone Number</label>
+                <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
+                  <span class="input-group-text bg-transparent border-0 pe-1"><i class="fa-solid fa-mobile-screen text-muted"></i></span>
+                  <input type="text" class="form-control bg-transparent border-0 ps-2" name="phone" required placeholder="+91 90000 00000" />
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Email Address</label>
+                <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
+                  <span class="input-group-text bg-transparent border-0 pe-1"><i class="fa-regular fa-envelope text-muted"></i></span>
+                  <input type="email" class="form-control bg-transparent border-0 ps-2" name="email" required placeholder="name@example.com" />
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Password</label>
+                <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
+                  <span class="input-group-text bg-transparent border-0 pe-1"><i class="fa-solid fa-lock text-muted"></i></span>
+                  <input type="password" class="form-control bg-transparent border-0 ps-2" name="password" required placeholder="********" />
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Register As</label>
+                <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
+                  <span class="input-group-text bg-transparent border-0 pe-1"><i class="fa-solid fa-users text-muted"></i></span>
+                  <select class="form-select bg-transparent border-0 ps-2 fw-medium" name="role" id="roleSelect">
+                    <option value="user">User</option>
+                    <option value="owner">Venue Owner</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="ownerPaymentFields" class="card bg-primary-subtle border-0 rounded-4 mt-4 p-4 position-relative overflow-hidden" style="display:none; transition: all 0.3s ease;">
+              <div class="position-absolute end-0 top-0 opacity-10" style="transform: translate(20%, -20%); pointer-events: none;">
+                <i class="fa-solid fa-building-columns" style="font-size: 8rem;"></i>
+              </div>
+              <h5 class="fw-bold mb-3 d-flex align-items-center font-outfit text-primary position-relative z-1"><i class="fa-solid fa-wallet me-2"></i> Owner Payment Details</h5>
+              <p class="small text-muted mb-4 position-relative z-1">Required to receive payments from bookings.</p>
+              
+              <div class="row g-3 position-relative z-1">
+                <div class="col-12">
+                  <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">Account Holder Name</label>
+                  <input type="text" class="form-control border-0 shadow-sm" name="accountHolderName" placeholder="Name on bank account" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">UPI ID</label>
+                  <input type="text" class="form-control border-0 shadow-sm" name="upiId" placeholder="example@upi" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.05em;">QR Code Image (Optional)</label>
+                  <input type="file" class="form-control border-0 shadow-sm" name="qrCodeImage" accept="image/*" />
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid mt-5">
+              <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow position-relative overflow-hidden" type="submit">
+                <span class="position-relative z-1 d-flex align-items-center justify-content-center">
+                  Create Account <i class="fa-solid fa-arrow-right ms-2"></i>
+                </span>
+              </button>
+            </div>
+            
+            <div class="text-center mt-4">
+              <p class="text-muted mb-0">Already have an account? <a href="/auth/login" class="text-primary fw-bold text-decoration-none border-bottom border-primary border-2 pb-1">Login here</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('roleSelect');
+    const ownerPaymentFields = document.getElementById('ownerPaymentFields');
+
+    const syncOwnerFields = () => {
+      if(roleSelect.value === 'owner') {
+        ownerPaymentFields.style.display = 'block';
+        ownerPaymentFields.style.opacity = '0';
+        setTimeout(() => {
+          ownerPaymentFields.style.opacity = '1';
+        }, 50);
+      } else {
+        ownerPaymentFields.style.display = 'none';
+        ownerPaymentFields.style.opacity = '0';
+      }
+    };
+
+    roleSelect.addEventListener('change', syncOwnerFields);
+    syncOwnerFields();
+  });
+</script>

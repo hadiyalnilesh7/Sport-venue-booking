@@ -1,0 +1,94 @@
+<section class="container py-5">
+  <div class="mb-4 pb-3 border-bottom">
+    <h6 class="text-uppercase text-primary fw-bold tracking-wide mb-1"><i class="fa-solid fa-shield-halved me-2"></i>Admin Dashboard</h6>
+    <h2 class="fw-bold mb-0">Payment Review & Disputes (View Only)</h2>
+  </div>
+  <form method="GET" action="/admin/payments" class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-auto">
+        <p class="text-muted small text-uppercase fw-bold mb-0" style="letter-spacing: 0.05em;"><i class="fa-solid fa-filter text-primary me-1"></i>Filter by Booking Date</p>
+      </div>
+      <div class="col-12 col-sm-5 col-md-3">
+        <label class="form-label small fw-semibold text-muted mb-1">From</label>
+        <input type="date" name="from" class="form-control rounded-3 border-0 bg-light" value="<%= from %>">
+      </div>
+      <div class="col-12 col-sm-5 col-md-3">
+        <label class="form-label small fw-semibold text-muted mb-1">To</label>
+        <input type="date" name="to" class="form-control rounded-3 border-0 bg-light" value="<%= to %>">
+      </div>
+      <div class="col-12 col-sm-2 col-md-auto d-flex gap-2">
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm"><i class="fa-solid fa-magnifying-glass me-1"></i>Search</button>
+        <% if (from || to) { %>
+          <a href="/admin/payments" class="btn btn-outline-secondary rounded-pill fw-bold px-3"><i class="fa-solid fa-xmark"></i></a>
+        <% } %>
+      </div>
+    </div>
+  </form>
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4 py-3 text-secondary fw-semibold">Booking</th>
+            <th class="py-3 text-secondary fw-semibold">User</th>
+            <th class="py-3 text-secondary fw-semibold">Owner</th>
+            <th class="py-3 text-secondary fw-semibold">Venue</th>
+            <th class="py-3 text-secondary fw-semibold">Date</th>
+            <th class="py-3 text-secondary fw-semibold">Status</th>
+            <th class="py-3 text-secondary fw-semibold">Proof</th>
+            <th class="pe-4 py-3 text-secondary fw-semibold text-center">Admin Access</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!bookings || bookings.length === 0) { %>
+            <tr>
+              <td colspan="8" class="text-center py-5 text-muted fst-italic">No bookings require review.</td>
+            </tr>
+          <% } %>
+          <% bookings.forEach((booking) => { %>
+            <tr>
+              <td class="ps-4 py-3">
+                <span class="fw-bold text-primary"><%= booking.bookingCode %></span><br />
+                <span class="badge bg-light text-dark border font-monospace mt-1"><i class="fa-solid fa-hashtag"></i><%= booking.paymentReference || 'No Ref' %></span>
+              </td>
+              <td class="py-3 text-dark fw-medium"><%= booking.user ? booking.user.fullName : 'N/A' %></td>
+              <td class="py-3 text-dark fw-medium"><%= booking.owner ? booking.owner.fullName : 'N/A' %></td>
+              <td class="py-3 text-muted"><i class="fa-solid fa-location-dot me-1"></i><%= booking.venue ? booking.venue.name : 'N/A' %></td>
+              <td class="py-3 text-secondary small"><%= formatDate(booking.bookingDate) %></td>
+              <td class="py-3">
+                <div class="mb-2">
+                  <span class="badge rounded-pill fw-medium <%= booking.bookingStatus === 'Confirmed' ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : (booking.bookingStatus === 'Pending' ? 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25' : (booking.bookingStatus === 'Payment Due' ? 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25' : 'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25')) %>">
+                    <%= booking.bookingStatus %>
+                  </span>
+                </div>
+                <div>
+                  <span class="badge <%= booking.paymentStatus === 'Verified' ? 'bg-success' : (booking.paymentStatus === 'Pending' ? 'bg-warning text-dark' : 'bg-danger') %>">
+                    <%= booking.paymentStatus %>
+                  </span>
+                </div>
+                <% if (booking.disputeHistory && booking.disputeHistory.length) { %>
+                  <div class="mt-2 p-2 bg-light border rounded small">
+                    <div class="fw-bold text-muted mb-1" style="font-size: 0.7rem;">DISPUTE HISTORY</div>
+                    <% booking.disputeHistory.slice(-2).forEach((item) => { %>
+                      <div class="text-secondary" style="font-size: 0.8rem;"><strong class="text-dark"><%= item.actor %></strong>: <%= item.note %></div>
+                    <% }) %>
+                  </div>
+                <% } %>
+              </td>
+              <td class="py-3 text-center">
+                <% if (booking.paymentProof && booking.paymentProof.screenshot) { %>
+                  <a href="<%= booking.paymentProof.screenshot %>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill"><i class="fa-regular fa-image me-1"></i>View</a>
+                <% } else { %>
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary border">No proof</span>
+                <% } %>
+              </td>
+              <td class="pe-4 py-3 text-center">
+                <span class="badge bg-light text-muted border px-3 py-2">View Only</span>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

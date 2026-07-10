@@ -1,0 +1,185 @@
+<section class="container py-5 mt-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
+    <div>
+      <div class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 shadow-sm rounded-pill fw-bold text-uppercase" style="letter-spacing: 0.05em;">
+        <i class="fa-solid fa-chart-line me-2"></i>Booking Management
+      </div>
+      <h2 class="display-6 fw-bold mb-1 font-outfit text-dark">Recent Activity</h2>
+      <p class="text-muted fs-6 mb-0">Track all bookings, verify payments, and manage venue reservations.</p>
+    </div>
+  </div>
+
+  <form method="GET" action="/owner/bookings" class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-auto">
+        <p class="text-muted small text-uppercase fw-bold mb-0" style="letter-spacing: 0.05em;"><i class="fa-solid fa-filter text-primary me-1"></i>Filter by Booking Date</p>
+      </div>
+      <div class="col-12 col-sm-5 col-md-3">
+        <label class="form-label small fw-semibold text-muted mb-1">From</label>
+        <input type="date" name="from" class="form-control rounded-3 border-0 bg-light" value="<%= from %>">
+      </div>
+      <div class="col-12 col-sm-5 col-md-3">
+        <label class="form-label small fw-semibold text-muted mb-1">To</label>
+        <input type="date" name="to" class="form-control rounded-3 border-0 bg-light" value="<%= to %>">
+      </div>
+      <div class="col-12 col-sm-2 col-md-auto d-flex gap-2">
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm"><i class="fa-solid fa-magnifying-glass me-1"></i>Search</button>
+        <% if (from || to) { %>
+          <a href="/owner/bookings" class="btn btn-outline-secondary rounded-pill fw-bold px-3"><i class="fa-solid fa-xmark"></i></a>
+        <% } %>
+      </div>
+    </div>
+  </form>
+
+  <div class="row g-4 mb-5">
+    <!-- Payment Summary Stat Cards -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 hover-lift bg-white">
+        <div class="bg-primary position-absolute top-0 start-0 h-100 rounded-start-4" style="width: 6px;"></div>
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-muted small text-uppercase fw-bold" style="letter-spacing: 0.05em;">Total Amount</div>
+            <div class="bg-primary-subtle text-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;"><i class="fa-solid fa-sack-dollar"></i></div>
+          </div>
+          <div class="fs-2 fw-bold text-dark font-outfit">₹<%= paymentSummary.totalAmount %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 hover-lift bg-white">
+        <div class="bg-success position-absolute top-0 start-0 h-100 rounded-start-4" style="width: 6px;"></div>
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-muted small text-uppercase fw-bold" style="letter-spacing: 0.05em;">Total Received Payment</div>
+            <div class="bg-success-bg text-success rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+          </div>
+          <div class="fs-2 fw-bold text-dark font-outfit">₹<%= paymentSummary.totalReceived %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 hover-lift bg-white">
+        <div class="bg-warning position-absolute top-0 start-0 h-100 rounded-start-4" style="width: 6px;"></div>
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-muted small text-uppercase fw-bold" style="letter-spacing: 0.05em;">Pending Balance</div>
+            <div class="bg-warning-bg text-warning rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;"><i class="fa-solid fa-hourglass-half"></i></div>
+          </div>
+          <div class="fs-2 fw-bold text-dark font-outfit">₹<%= paymentSummary.pendingBalance %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light">
+          <tr>
+            <th class="ps-4 py-3 text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Booking</th>
+            <th class="py-3 text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Customer</th>
+            <th class="py-3 text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Venue / Date</th>
+            <th class="py-3 text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Reservation</th>
+            <th class="py-3 text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Payment</th>
+            <th class="py-3 text-muted text-uppercase small fw-bold text-center" style="letter-spacing: 0.05em;">Proof</th>
+            <th class="pe-4 py-3 text-muted text-uppercase small fw-bold text-center" style="letter-spacing: 0.05em;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!bookings || bookings.length === 0) { %>
+            <tr>
+              <td colspan="7" class="text-center py-5">
+                <i class="fa-regular fa-calendar-times text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
+                <h5 class="fw-bold text-dark">No bookings found</h5>
+                <p class="text-muted mb-0">Bookings for your venues will appear here.</p>
+              </td>
+            </tr>
+          <% } %>
+          <% bookings.forEach((booking) => { %>
+            <tr class="transition-fast hover-bg">
+              <td class="ps-4 py-4 fw-bold text-primary font-outfit">
+                <i class="fa-solid fa-hashtag text-muted me-1 small"></i><%= booking.bookingCode %>
+              </td>
+              <td class="py-4">
+                <div class="fw-bold text-dark"><%= booking.user.fullName %></div>
+                <div class="text-muted small"><%= booking.user.email %></div>
+                <div class="small mt-1">
+                  <i class="fa-solid fa-phone text-primary me-1"></i>
+                  <a href="tel:<%= booking.user.phone %>" class="text-decoration-none"><%= booking.user.phone %></a>
+                </div>
+              </td>
+              <td class="py-4">
+                <div class="fw-bold text-dark"><i class="fa-solid fa-location-dot text-primary me-2 small"></i><%= booking.venue.name %></div>
+                <div class="text-muted small"><i class="fa-regular fa-calendar me-2 small"></i><%= formatDate(booking.bookingDate) %></div>
+                <div class="text-muted small"><i class="fa-regular fa-clock me-2 small"></i><%= booking.slotStartTime %> - <%= booking.slotEndTime %></div>
+              </td>
+              <td class="py-4">
+                <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase <%= booking.bookingStatus === 'Confirmed' ? 'bg-success-bg text-success' : (booking.bookingStatus === 'Pending' ? 'bg-warning-bg text-warning' : (booking.bookingStatus === 'Payment Due' ? 'bg-danger-subtle text-danger border border-danger border-opacity-25' : 'bg-light text-muted border')) %>" style="letter-spacing: 0.05em; font-size: 0.7rem;">
+                  <%= booking.bookingStatus %>
+                </span>
+              </td>
+              <td class="py-4">
+                <div class="fw-bold text-dark"><%= booking.paymentStatus %></div>
+                <div class="text-muted font-monospace small" style="font-size: 0.7rem;"><%= booking.paymentReference || 'No reference' %></div>
+              </td>
+              <td class="py-4 text-center">
+                <% if (booking.paymentProof && booking.paymentProof.screenshot) { %>
+                  <a href="<%= booking.paymentProof.screenshot %>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold">
+                    <i class="fa-solid fa-image me-1"></i> View
+                  </a>
+                <% } else { %>
+                  <span class="text-muted opacity-50 small"><i class="fa-solid fa-minus"></i></span>
+                <% } %>
+              </td>
+              <td class="pe-4 py-3">
+                <% if (booking.paymentStatus === 'Pending' && booking.paymentProof && booking.paymentProof.screenshot) { %>
+                  <div class="d-flex flex-column gap-2">
+                    <form method="POST" action="/owner/bookings/<%= booking._id %>/verify-payment">
+                      <div class="input-group input-group-sm">
+                        <input type="text" name="verificationNote" class="form-control" placeholder="Note (optional)" />
+                        <button class="btn btn-success fw-bold" type="submit" title="Confirm Payment"><i class="fa-solid fa-check"></i></button>
+                      </div>
+                    </form>
+                    <form method="POST" action="/owner/bookings/<%= booking._id %>/reject-payment">
+                      <div class="input-group input-group-sm">
+                        <input type="text" name="rejectionReason" class="form-control" placeholder="Reject reason" required />
+                        <button class="btn btn-danger fw-bold" type="submit" title="Reject Payment"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </form>
+                  </div>
+                <% } else if (booking.paymentStatus === 'Partial Paid' && booking.bookingStatus !== 'Cancelled') { %>
+                  <div class="d-flex flex-column gap-2">
+                    <div class="rounded-3 border bg-light px-3 py-2">
+                      <div class="text-muted small">Remaining Due</div>
+                      <div class="fw-bold text-danger">₹<%= booking.pricingBreakdown.remainingAmount %></div>
+                    </div>
+                    <form method="POST" action="/owner/bookings/<%= booking._id %>/confirm-remaining-payment">
+                      <input
+                        type="hidden"
+                        name="remainingPaymentNote"
+                        value="Owner confirmed remaining payment received: ₹<%= booking.pricingBreakdown.remainingAmount %>"
+                      />
+                      <button class="btn btn-primary btn-sm w-100 fw-bold" type="submit" title="Confirm Remaining Payment Received">
+                        Confirm Received
+                      </button>
+                    </form>
+                  </div>
+                <% } else { %>
+                  <div class="text-center">
+                    <span class="badge bg-light text-muted border px-3 py-2 rounded-pill fw-bold" style="font-size: 0.7rem;"><%= booking.paymentStatus === 'Fully Paid' ? 'Paid' : 'Verified' %></span>
+                  </div>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hover-bg:hover {
+    background-color: var(--bg-surface-hover) !important;
+  }
+</style>

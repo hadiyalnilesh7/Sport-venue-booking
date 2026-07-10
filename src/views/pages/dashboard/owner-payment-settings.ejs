@@ -1,0 +1,67 @@
+<section class="container py-5 mt-4">
+  <div class="max-w-700 mx-auto">
+    <div class="mb-5 pb-3 border-bottom d-flex align-items-center">
+      <div class="bg-primary-subtle text-primary rounded-circle p-3 me-3">
+        <i class="fa-solid fa-credit-card fs-3"></i>
+      </div>
+      <div>
+        <div class="badge bg-primary-subtle text-primary mb-1 px-3 py-1 rounded-pill fw-bold text-uppercase small">Owner Module</div>
+        <h2 class="display-6 fw-bold mb-0 font-outfit text-dark">Payout Settings</h2>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+      <p class="text-muted mb-4 fs-6">Configure how you receive payments from players. These details will be displayed on the booking summary page for customers to complete their 25% advance payment.</p>
+
+      <form action="/owner/payment-settings" method="POST" enctype="multipart/form-data" class="row g-4">
+        <div class="col-12">
+          <label class="form-label small fw-bold text-muted text-uppercase">Account Holder Name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-user text-muted small"></i></span>
+            <input type="text" name="accountHolderName" value="<%= owner.paymentDetails && owner.paymentDetails.accountHolderName ? owner.paymentDetails.accountHolderName : '' %>" required class="form-control bg-light border-0 py-2" placeholder="e.g. John Doe" />
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label small fw-bold text-muted text-uppercase">UPI ID (VPA)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-mobile-screen-button text-muted small"></i></span>
+            <input type="text" name="upiId" value="<%= owner.paymentDetails && owner.paymentDetails.upiId ? owner.paymentDetails.upiId : '' %>" required class="form-control bg-light border-0 py-2" placeholder="e.g. john@okaxis" />
+          </div>
+          <div class="form-text small opacity-75">Used for direct bank transfers via UPI apps.</div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label small fw-bold text-muted text-uppercase">Update QR Code</label>
+          <div class="input-group">
+            <input type="file" name="ownerQrCodeImage" accept="image/*" class="form-control bg-light border-0 py-2" />
+          </div>
+          <div class="form-text small opacity-75">Upload a clear screenshot of your GPay/PhonePe/Paytm QR code.</div>
+        </div>
+
+        <% if (owner.paymentDetails && owner.paymentDetails.qrCodeImage) { %>
+          <div class="col-12">
+            <div class="p-4 bg-light rounded-4 text-center border">
+              <label class="form-label d-block small fw-bold text-muted text-uppercase mb-3">Live QR Code Preview</label>
+              <div class="qr-preview-container bg-white p-3 rounded-3 shadow-sm d-inline-block">
+                <img src="<%= owner.paymentDetails.qrCodeImage %>" alt="Owner QR code" class="img-fluid rounded border" style="max-height: 250px;" />
+              </div>
+              <p class="mt-3 text-muted small mb-0"><i class="fa-solid fa-circle-check text-success me-1"></i> Currently active for all your venues.</p>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="col-12 mt-5">
+          <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-lg py-3" type="submit">
+            <i class="fa-solid fa-floppy-disk me-2"></i> Update Payout Details
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .max-w-700 { max-width: 700px; }
+  .qr-preview-container { border: 2px dashed #dee2e6; }
+</style>
