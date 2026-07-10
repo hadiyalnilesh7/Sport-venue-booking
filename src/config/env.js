@@ -2,8 +2,13 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-if (!process.env.MONGODB_URI) {
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
   console.error('Missing MONGODB_URI environment variable.');
+}
+
+if (process.env.NODE_ENV === 'production' && !mongoUri) {
+  throw new Error('MONGODB_URI is required in production. Set it in Vercel Environment Variables.');
 }
 
 module.exports = {
@@ -11,7 +16,7 @@ module.exports = {
   port: Number(process.env.PORT) || 5000,
   appName: process.env.APP_NAME || 'Sports Venue Booking Platform',
   appUrl: process.env.APP_URL || 'http://localhost:5000',
-  mongodbUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sports-venue-booking-platform',
+  mongodbUri: mongoUri || 'mongodb://127.0.0.1:27017/sports-venue-booking-platform',
   sessionSecret: process.env.SESSION_SECRET || 'development-secret',
   smtpHost: process.env.SMTP_HOST || '',
   smtpPort: Number(process.env.SMTP_PORT) || 587,
