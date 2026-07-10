@@ -2,6 +2,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+if (!process.env.MONGODB_URI) {
+  console.error('Missing MONGODB_URI environment variable.');
+}
+
 module.exports = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 5000,

@@ -11,6 +11,13 @@ const initializeApp = async () => {
 };
 
 module.exports = async (req, res) => {
-  await initializeApp();
-  return app(req, res);
+  try {
+    await initializeApp();
+    return app(req, res);
+  } catch (error) {
+    console.error('Server initialization failed:', error.message || error);
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'text/plain');
+    return res.end('Internal Server Error');
+  }
 };
