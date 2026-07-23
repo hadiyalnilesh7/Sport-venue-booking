@@ -19,19 +19,21 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'partials/layout');
 
 app.use(expressLayouts);
-// app.use(morgan(env.nodeEnv === 'development' ? 'dev' : 'combined', {
-//   skip: (_req, res) => res.statusCode < 400
-// }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method'));
+
+// Session middleware with deferred MongoDB connection
 app.use(
   session({
     secret: env.sessionSecret,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: env.mongodbUri }),
+    store: MongoStore.create({
+      mongoUrl: env.mongodbUri,
+      touchAfter: 24 * 3600 // Lazy session update (in seconds)
+    }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
@@ -55,6 +57,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoints (no database required)
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok',
+    app: 'Sports Venue Booking Platform',
+    time: new Date().toISOString()
+  });
+});
+
+// Main routes
 app.use('/', webRoutes);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);

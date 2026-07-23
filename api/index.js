@@ -1,55 +1,72 @@
 /**
- * Vercel Serverless Function Handler
- * Handles all HTTP requests for the Sports Venue Booking Platform
+ * Vercel Serverless Handler
+ * Sports Venue Booking Platform
  */
 
-const app = require('../src/app');
-const { connectDatabase } = require('../src/config/db');
 const mongoose = require('mongoose');
 
-let connectionInitiated = false;
+// Keep a reference to the app and database connection
+let app = null;
+let dbConnected = false;
 
 /**
- * Async handler wrapper that catches all errors
+ * Initialize the application (lazy loading)
+ */
+const initializeApp = async () => {
+  // If app already initialized, return it
+  if (app) {
+    return app;
+  }
+
+  try {
+    console.log('[Init] Loading application...');
+    
+    // Require the Express app
+    app = require('../src/app');
+    console.log('[Init] Express app loaded');
+
+    // Require database config
+    const { connectDatabase } = require('../src/config/db');
+
+    // Connect to database if not already connected
+    if (!dbConnected) {
+      console.log('[Init] Connecting to MongoDB...');
+      await connectDatabase();
+      dbConnected = true;
+      console.log('[Init] MongoDB connected');
+    }
+
+    console.log('[Init] Application ready');
+    return app;
+  } catch (error) {
+    console.error('[Init] Initialization failed:', error.message);
+    throw error;
+  }
+};
+
+/**
+ * Main serverless handler
  */
 module.exports = async (req, res) => {
   try {
-    // Initialize database connection on first request
-    if (!connectionInitiated) {
-      connectionInitiated = true;
-      
-      // Only connect if not already connected
-      if (mongoose.connection.readyState !== 1) {
-        console.log('[Handler] Connecting to database...');
-        await connectDatabase();
-        console.log('[Handler] Database connected');
-      }
-    }
+    // Initialize app on first request
+    const application = await initializeApp();
 
-    // Pass request to Express app
-    // Express will handle the request/response cycle
-    app(req, res);
+    // Invoke the Express app with the request and response
+    application(req, res);
   } catch (error) {
-    // Log the error for debugging
-    console.error('[Handler] Error:', {
-      message: error?.message || 'Unknown error',
-      type: error?.constructor?.name,
-      statusCode: error?.statusCode
-    });
+    console.error('[Handler] Error:', error.message);
 
-    // Only send response if headers not already sent
+    // Send error response
     if (!res.headersSent) {
-      res.statusCode = error?.statusCode || 500;
+      res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
-      
       res.end(JSON.stringify({
         success: false,
-        error: 'Internal Server Error',
-        message: process.env.NODE_ENV === 'development' 
-          ? error?.message 
-          : 'An error occurred processing your request'
+        error: 'Internal Server Error'
       }));
     }
   }
 };
+
 
