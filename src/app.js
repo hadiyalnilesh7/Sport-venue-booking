@@ -48,6 +48,13 @@ app.use((req, res, next) => {
   next();
 });
 
+// Set timeout for requests (45 seconds for Vercel's 60-second limit)
+app.use((req, res, next) => {
+  req.setTimeout(45000);
+  res.setTimeout(45000);
+  next();
+});
+
 app.use('/', webRoutes);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
