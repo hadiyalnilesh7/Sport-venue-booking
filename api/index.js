@@ -1,60 +1,55 @@
+/**
+ * Vercel Serverless Function Handler
+ * Handles all HTTP requests for the Sports Venue Booking Platform
+ */
+
 const app = require('../src/app');
 const { connectDatabase } = require('../src/config/db');
+const mongoose = require('mongoose');
 
-let isConnecting = false;
-let connectionError = null;
+let connectionInitiated = false;
 
-const initializeApp = async () => {
-  if (isConnecting) {
-    if (connectionError) {
-      throw connectionError;
-    }
-    return;
-  }
-
-  try {
-    isConnecting = true;
-    connectionError = null;
-    
-    console.log('[API] Initializing app...');
-    await connectDatabase();
-    console.log('[API] App initialized successfully');
-  } catch (error) {
-    isConnecting = false;
-    connectionError = error;
-    console.error('[API] Initialization error:', error.message || error);
-    throw error;
-  } finally {
-    isConnecting = false;
-  }
-};
-
+/**
+ * Async handler wrapper that catches all errors
+ */
 module.exports = async (req, res) => {
   try {
-    console.log(`[API] ${req.method} ${req.url}`);
-    
-    await initializeApp();
-    
-    return app(req, res);
+    // Initialize database connection on first request
+    if (!connectionInitiated) {
+      connectionInitiated = true;
+      
+      // Only connect if not already connected
+      if (mongoose.connection.readyState !== 1) {
+        console.log('[Handler] Connecting to database...');
+        await connectDatabase();
+        console.log('[Handler] Database connected');
+      }
+    }
+
+    // Pass request to Express app
+    // Express will handle the request/response cycle
+    app(req, res);
   } catch (error) {
-    console.error('[API] Request handler error:', error.message || error);
-    console.error('[API] Stack:', error.stack);
-    
+    // Log the error for debugging
+    console.error('[Handler] Error:', {
+      message: error?.message || 'Unknown error',
+      type: error?.constructor?.name,
+      statusCode: error?.statusCode
+    });
+
+    // Only send response if headers not already sent
     if (!res.headersSent) {
-      res.statusCode = 500;
+      res.statusCode = error?.statusCode || 500;
       res.setHeader('Content-Type', 'application/json');
       
-      const errorResponse = {
+      res.end(JSON.stringify({
+        success: false,
         error: 'Internal Server Error',
-        message: error.message || 'Unknown error occurred',
-        status: 500
-      };
-      
-      if (process.env.NODE_ENV !== 'production') {
-        errorResponse.details = error.toString();
-      }
-      
-      res.end(JSON.stringify(errorResponse));
+        message: process.env.NODE_ENV === 'development' 
+          ? error?.message 
+          : 'An error occurred processing your request'
+      }));
     }
   }
 };
+
